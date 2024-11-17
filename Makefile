@@ -1,18 +1,15 @@
 NAME = cub3d
-
 SRC = src/my_ft_strjoin.c src/main.c src/data_utils.c src/open_file.c
-
 OBJ = $(SRC:.c=.o)
-
 CC = cc
-
-CFLAGS = -Wall -Werror -Wextra -g #-lreadline -g #fsanitize=address
-
-INCLUDES = -I /libft/
-
+CFLAGS = -Wall -Werror -Wextra -g
+INCLUDES = -I include/
 LIBFT = include/libft/libft.a
-
 LIBFT_LIB = include/libft
+
+MLX_LIB_DIR = include/mlx_linux/
+MLX_INCLUDE = -I $(MLX_LIB_DIR)
+MLX_FLAGS = -L$(MLX_LIB_DIR) -lmlx_Linux -L/usr/lib -lXext -lX11 -lm -lz
 
 all: $(LIBFT) $(OBJ) $(NAME)
 
@@ -20,37 +17,35 @@ $(LIBFT):
 	@echo "\n-Compiling Libft...\n"
 	@$(MAKE) -C $(LIBFT_LIB)
 
-	@echo "\n-Compiling $(NAME)..."
-
 $(OBJ): %.o: %.c
 	@echo "Compiling $@..."
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(MAKE) -s -C $(MLX_LIB_DIR)
+	@$(CC) $(CFLAGS) $(INCLUDES) $(MLX_INCLUDE) -c $< -o $@
 
 $(NAME): $(OBJ)
-	@echo "n-Linking $(NAME) with libft..."
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME)
-	@make clean
-	@echo "n--------------------------------"
+	@echo "\n-Linking $(NAME) with Libft and MLX...\n"
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
+	@echo "\n--------------------------------"
 	@echo "$(NAME) is ready!"
-	@echo "-------------------------------"
+	@echo "--------------------------------"
 
 clean:
-	@echo "n-Cleaning Libft..."
+	@echo "\n-Cleaning Libft..."
 	$(MAKE) -C $(LIBFT_LIB) clean
-	@echo "n-Cleaning object files..."
+	@echo "\n-Cleaning object files..."
 	@rm -f $(OBJ)
-	@echo "n--------------------------------"
+	@echo "\n--------------------------------"
 	@echo "$(NAME) object files cleaned!"
-	@echo "-------------------------------"
+	@echo "--------------------------------"
 
 fclean: clean
-	@echo "n-Cleaning $(NAME) and libft..."
+	@echo "\n-Cleaning $(NAME) and Libft..."
 	rm -f $(NAME)
 	$(MAKE) -C $(LIBFT_LIB) fclean
-	@echo "n--------------------------------"
-	@echo "$(NAME) object files cleaned!"
-	@echo "-------------------------------"
+	@echo "\n--------------------------------"
+	@echo "$(NAME) cleaned!"
+	@echo "--------------------------------"
 
 re: fclean all
 
-.PHONY: all clean fclean re r
+.PHONY: all clean fclean re

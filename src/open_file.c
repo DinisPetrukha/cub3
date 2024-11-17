@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 13:38:17 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/17 16:10:48 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/17 16:13:28 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**read_map(int fd)
 	}
 	return (map_index);
 }
-
+//
 int	file_name_verification(char *path)
 {
 	int	i;
@@ -55,7 +55,8 @@ int	file_name_verification(char *path)
 		return (1);
 	return (0);
 }
-
+// Return 1 if all correct
+// Return 0 if not correct and print the error
 int	open_file(char *path)
 {
 	int	fd;
