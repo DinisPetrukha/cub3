@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 08:54:47 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/17 13:51:48 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/17 18:36:37 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 int	main(int argc, char *argv[])
 {
-	data_ref();
+	data_();
 
+	// Open and check The File
 	if (argc == 2)
 	{
 		open_file(argv[1]);
 	}
+	// Init MLX and Game
+	game_init();
 }

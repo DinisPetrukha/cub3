@@ -5,6 +5,9 @@
 #  define BUFFER_SIZE 10
 # endif
 
+# define BLOCK_SIZE 32
+# define PLAYER_SIZE_V1 12
+
 # include "mlx_linux/mlx.h"
 # include "libft/libft.h"
 # include <unistd.h>
@@ -17,8 +20,10 @@
 # include <stdint.h>
 
 typedef struct s_data {
+	void	*mlx_ptr;
+	void	*win_ptr;
+	void	*image_ptr;
 	char	**map;
-	char	*test;
 }
 	t_data;
 
@@ -29,8 +34,13 @@ char	*my_ft_strjoin(char const *s1, char const *s2);
 int		open_file(char *path);
 char	**read_map(int fd);
 
+//FUNCTIONs_UTILS
+
 // DATA_UTILS
-t_data	*data_ref(void);
+t_data	*data_(void);
 void	print_map(void);
+
+//GAME_INIT
+int		game_init(void);
 
 #endif

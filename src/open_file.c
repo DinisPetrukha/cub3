@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 13:38:17 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/17 16:13:28 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/17 18:54:25 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**read_map(int fd)
 	}
 	return (map_index);
 }
-//
+
 int	file_name_verification(char *path)
 {
 	int	i;
@@ -75,11 +75,13 @@ int	open_file(char *path)
 		return (0);
 	}
 	//Read Map
-	data_ref()->map = read_map(fd);
-	if (data_ref()->map == NULL)
+	data_()->map = read_map(fd);
+	if (data_()->map == NULL)
 		return (0);
 	print_map(); // <-- Test
 	//Check if valid map
+
+	//Load all necessary data to t_data struct
 
 	//Return 1 if all good
 	return (1);
