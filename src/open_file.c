@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 13:38:17 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/17 13:51:56 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/17 16:10:48 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,26 @@ char	**read_map(int fd)
 	map_index = ft_split(map_inline, '\n');
 	if (!map_index)
 	{
-		perror("Error\nMap is empty\n");
+		ft_putstr_fd("Error\nMap is empty\n", 2);
 		return (NULL);
 	}
 	return (map_index);
+}
+
+int	file_name_verification(char *path)
+{
+	int	i;
+
+	i = 0;
+	while (path[i])
+	{
+		if (path[i] == '.')
+			break ;
+		i++;
+	}
+	if (!ft_strncmp(&path[i], ".cub", 5))
+		return (1);
+	return (0);
 }
 
 int	open_file(char *path)
@@ -45,7 +61,11 @@ int	open_file(char *path)
 	int	fd;
 
 	//Check if ends with .cub
-
+	if (!file_name_verification(path))
+	{
+		ft_putstr_fd("Error\nInvalid file name\n", 2);
+		return (0);
+	}
 	//Open Map
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
@@ -55,8 +75,11 @@ int	open_file(char *path)
 	}
 	//Read Map
 	data_ref()->map = read_map(fd);
-	print_map();
+	if (data_ref()->map == NULL)
+		return (0);
+	print_map(); // <-- Test
 	//Check if valid map
 
+	//Return 1 if all good
 	return (1);
 }
