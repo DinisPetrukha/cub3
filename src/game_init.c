@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 16:47:46 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/18 15:53:09 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/18 15:54:11 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	draw_square_to_image(int x, int y, int color, int size, t_image *image)
 		s_x = 0;
 		while (s_x < size)
 		{
-			//mlx_pixel_put(data_()->mlx_ptr, data_()->win_ptr, s_x + x, s_y + y, color);
 			my_mlx_pixel_put(image, s_x + x, s_y + y, color);
 			s_x++;
 		}
@@ -58,26 +57,12 @@ void	draw_square_to_image(int x, int y, int color, int size, t_image *image)
 
 void	draw_player(t_player *player)
 {
-	// int	p_y;
-	// int	p_x;
 	int	x;
 	int	y;
 
 	y = ((player->y * BLOCK_SIZE) + (BLOCK_SIZE / 2)) - (PLAYER_SIZE_V1 / 2);
 	x = ((player->x *BLOCK_SIZE) + (BLOCK_SIZE / 2)) - (PLAYER_SIZE_V1 / 2);
-	//p_y = 0;
 	draw_square_to_image(x, y, 0x00FF0000, PLAYER_SIZE_V1, data_()->canva);
-	// while (p_y < PLAYER_SIZE_V1)
-	// {
-	// 	p_x = 0;
-	// 	while (p_x < PLAYER_SIZE_V1)
-	// 	{
-	// 		//mlx_pixel_put(data_()->mlx_ptr, data_()->win_ptr, p_x + x, p_y + y, color);
-	// 		my_mlx_pixel_put(player->image, p_x + x, p_y + y, color);
-	// 		p_x++;
-	// 	}
-	// 	p_y++;
-	// }
 }
 
 int	draw_map_v1(void *param)
