@@ -1,5 +1,5 @@
-#ifndef SO_LONG_H
-# define SO_LONG_H
+#ifndef CUB3_H
+# define CUB3_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
@@ -19,11 +19,32 @@
 # include <stdarg.h>
 # include <stdint.h>
 
+typedef struct s_image
+{
+	void	*img_ptr;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+	int		width;
+	int		height;
+}	t_image;
+
+typedef struct s_player {
+	int		x;
+	int		y;
+	t_image	*image;
+}
+	t_player;
+
 typedef struct s_data {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	void	*image_ptr;
-	char	**map;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	void		*image_ptr;
+	char		**map;
+	t_image		*canva;
+	t_image		*map_layer;
+	t_player	*player;
 }
 	t_data;
 
@@ -42,5 +63,6 @@ void	print_map(void);
 
 //GAME_INIT
 int		game_init(void);
+void	init_image(t_image *image);
 
 #endif

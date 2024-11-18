@@ -1,5 +1,5 @@
 NAME = cub3d
-SRC = src/my_ft_strjoin.c src/main.c src/data_utils.c src/open_file.c src/game_init.c
+SRC = src/my_ft_strjoin.c src/main.c src/data_utils.c src/open_file.c src/game_init.c src/functions_utils.c
 OBJ = $(SRC:.c=.o)
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
