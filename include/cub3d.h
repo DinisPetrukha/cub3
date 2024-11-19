@@ -8,6 +8,21 @@
 # define BLOCK_SIZE 32
 # define PLAYER_SIZE_V1 12
 
+# define PLAYER_SPEED 4
+
+# define W 119
+# define UP 65362
+# define S 115
+# define DOWN 65364
+# define A 97
+# define LEFT 65361
+# define D 100
+# define RIGHT 65363
+
+# define ESC 65307
+# define Q 113
+
+# include <math.h>
 # include "mlx_linux/mlx.h"
 # include "libft/libft.h"
 # include <unistd.h>
@@ -31,8 +46,8 @@ typedef struct s_image
 }	t_image;
 
 typedef struct s_player {
-	int		x;
-	int		y;
+	float	x;
+	float	y;
 	t_image	*image;
 }
 	t_player;
@@ -42,6 +57,7 @@ typedef struct s_data {
 	void		*win_ptr;
 	void		*image_ptr;
 	char		**map;
+	int			first_render;
 	t_image		*canva;
 	t_image		*map_layer;
 	t_player	*player;
