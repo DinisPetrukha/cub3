@@ -59,6 +59,8 @@ typedef struct s_data {
 	void		*image_ptr;
 	char		**map;
 	int			first_render;
+	int			matrix_width;
+	int			matrix_height;
 	t_image		*canva;
 	t_image		*map_layer;
 	t_player	*player;
@@ -72,7 +74,7 @@ char	*my_ft_strjoin(char const *s1, char const *s2);
 int		open_file(char *path);
 char	**read_map(int fd);
 
-//FUNCTIONs_UTILS
+//FUNCTIONS_UTILS
 
 // DATA_UTILS
 t_data	*data_(void);
@@ -81,5 +83,21 @@ void	print_map(void);
 //GAME_INIT
 int		game_init(void);
 void	init_image(t_image *image);
+
+//CLOSE_FREE
+int		close_window(t_data *data);
+
+//PLAYER_MOVEMENT
+int		is_wall_player(t_data *data, float next_y, float next_x);
+int		is_wall_line(t_data *data, float next_y, float next_x, int *flag);
+void	player_movement(int keycode, t_data *data);
+int		keypress(int keycode, t_data *data);
+
+//DRAW_MAP
+int		draw_map_v1(void *param);
+void	draw_player_lines(t_player *player, int color, t_image *image);
+void	draw_square_to_image(int x, int y, int color, int size, t_image *image);
+void	draw_player(t_player *player);
+void	my_mlx_pixel_put(t_image *image, int y, int x, int color);
 
 #endif
