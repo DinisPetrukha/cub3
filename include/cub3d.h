@@ -48,6 +48,7 @@ typedef struct s_image
 typedef struct s_player {
 	float	x;
 	float	y;
+	float	angle;
 	t_image	*image;
 }
 	t_player;

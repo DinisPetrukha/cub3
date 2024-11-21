@@ -6,13 +6,13 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 16:47:46 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/19 19:24:14 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:10:48 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-void	my_mlx_pixel_put(t_image *image, int x, int y, int color)
+void	my_mlx_pixel_put(t_image *image, int y, int x, int color)
 {
 	char	*dst;
 
@@ -48,10 +48,34 @@ void	draw_square_to_image(int x, int y, int color, int size, t_image *image)
 		s_x = 0;
 		while (s_x < size)
 		{
-			my_mlx_pixel_put(image, s_x + x, s_y + y, color);
+			my_mlx_pixel_put(image, s_y + y, s_x + x, color);
 			s_x++;
 		}
 		s_y++;
+	}
+}
+
+void	draw_player_lines(t_player *player, int color, t_image *image)
+{
+	int	center[2];
+	int	line_len;
+	int	cur_y;
+	int	cur_x;
+	int	i;
+	//[0] == y
+	//[1] == x;
+
+	color = 0x000000;
+	center[0] = player->y + (PLAYER_SIZE_V1 / 2);
+	center[1] = player->x+ (PLAYER_SIZE_V1 / 2);
+	line_len = 30;
+	i = 0;
+	while (i < line_len)
+	{
+		cur_y = center[0] + i * sin(player->angle);
+		cur_x = center[1] + i * cos(player->angle);
+		my_mlx_pixel_put(image, cur_y , cur_x, color);
+		i++;
 	}
 }
 
@@ -64,6 +88,7 @@ void	draw_player(t_player *player)
 		data_()->first_render = 1;
 	}
 	draw_square_to_image(player->x, player->y, 0x00FF0000, PLAYER_SIZE_V1, data_()->canva);
+	draw_player_lines(player, 0x00FF0000, data_()->canva);
 }
 
 void	init_data(t_data *data)
@@ -128,7 +153,7 @@ int	is_wall(t_data *data, float next_y, float next_x)
 	top_left[1] = (int)(next_x / BLOCK_SIZE);
 
 	top_right[0] = (int)(next_y / BLOCK_SIZE);
-	top_right[1] = (int)((next_x + PLAYER_SIZE_V1) / BLOCK_SIZE); // Corrigido para top_right[1]
+	top_right[1] = (int)((next_x + PLAYER_SIZE_V1) / BLOCK_SIZE);
 
 	bottom_right[0] = (int)((next_y + PLAYER_SIZE_V1) / BLOCK_SIZE);
 	bottom_right[1] = (int)((next_x + PLAYER_SIZE_V1) / BLOCK_SIZE);
@@ -142,7 +167,7 @@ int	is_wall(t_data *data, float next_y, float next_x)
 			bottom_right[0], bottom_right[1],
 			bottom_left[0], bottom_left[1]);
 	printf("POSITION: %c\n", data->map[(int)top_left[0]][(int)top_left[1]]);
-	// Verificando se qualquer um dos blocos onde o jogador estaria é uma parede
+	// Verificar se qualquer um dos pontos onde o jogador estaria é uma parede
 	if (data->map[top_left[0]][top_left[1]] == '1' ||    // Canto superior esquerdo
 		data->map[top_right[0]][top_right[1]] == '1' ||   // Canto superior direito
 		data->map[bottom_right[0]][bottom_right[1]] == '1' || // Canto inferior direito
@@ -154,25 +179,36 @@ int	is_wall(t_data *data, float next_y, float next_x)
 
 void	player_movement(int keycode, t_data *data)
 {
+	t_player	*player;
+
+	player = data->player;
 	if (keycode == W || keycode == UP)
 	{
-		if (!is_wall(data, data->player->y - (1 * PLAYER_SPEED), data->player->x))
-			data->player->y -= 1 * PLAYER_SPEED;
+		if (!is_wall(data, player->y + PLAYER_SPEED * sin(player->angle), player->x + PLAYER_SPEED * cos(player->angle)))
+		{
+			player->y += PLAYER_SPEED * sin(player->angle);
+			player->x += PLAYER_SPEED * cos(player->angle);
+		}
 	}
 	if (keycode == S || keycode == DOWN)
 	{
-		if (!is_wall(data, data->player->y + (1 * PLAYER_SPEED), data->player->x))
-			data->player->y += 1 * PLAYER_SPEED;
+		if (!is_wall(data, player->y - PLAYER_SPEED * sin(player->angle), player->x - PLAYER_SPEED * cos(player->angle)))
+		{
+			player->y -= PLAYER_SPEED * sin(player->angle);
+			player->x -= PLAYER_SPEED * cos(player->angle);
+		}
 	}
 	if (keycode == A || keycode == LEFT)
 	{
-		if (!is_wall(data, data->player->y, data->player->x - (1 * PLAYER_SPEED)))
-			data->player->x -= 1 * PLAYER_SPEED;
+		player->angle -= 0.1;
+		if (player->angle < 0)
+			player->angle += 2 * M_PI;
 	}
 	if (keycode == D || keycode == RIGHT)
 	{
-		if (!is_wall(data, data->player->y, data->player->x + (1 * PLAYER_SPEED)))
-			data->player->x += 1 * PLAYER_SPEED;
+		player->angle += 0.1;
+		if (player->angle < 0)
+			player->angle -= 2 * M_PI;
 	}
 	draw_map_v1(data);
 }
