@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 16:47:46 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/21 15:10:48 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:19:31 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	draw_player_lines(t_player *player, int color, t_image *image)
 	//[0] == y
 	//[1] == x;
 
-	color = 0x000000;
+	// color = 0x000000;
 	center[0] = player->y + (PLAYER_SIZE_V1 / 2);
 	center[1] = player->x+ (PLAYER_SIZE_V1 / 2);
 	line_len = 30;
