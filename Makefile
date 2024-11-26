@@ -1,55 +1,42 @@
-NAME = cub3d
-SRC = src/my_ft_strjoin.c src/main.c src/data_utils.c src/open_file.c src/game_init.c src/functions_utils.c \
-		src/draw_map.c src/close_free.c src/player_movement.c
-OBJ = $(SRC:.c=.o)
-CC = cc
-CFLAGS = -Wall -Werror -Wextra -g
-INCLUDES = -I include/
-LIBFT = include/libft/libft.a
-LIBFT_LIB = include/libft
+NAME= cub3d
 
-MLX_LIB_DIR = include/mlx_linux/
-MLX_INCLUDE = -I $(MLX_LIB_DIR)
-MLX_FLAGS = -L$(MLX_LIB_DIR) -lmlx_Linux -L/usr/lib -lXext -lX11 -lm -lz
+CC= cc
+CFLAGS= -Wall -Werror -Wextra -g	
 
-all: $(LIBFT) $(OBJ) $(NAME)
+SOURCES= cub3d.c minimap.c destroy.c
+
+OBJ_DIR= obj
+OBJ= $(addprefix $(OBJ_DIR)/, $(SOURCES:.c=.o))
+
+MLX_DIR= ./mlx
+MLX= $(MLX_DIR)/libmlx_Linux.a -lXext -lX11 -lm -lz
+
+LIBFT_DIR= ./includes/libft
+LIBFT= $(LIBFT_DIR)/libft.a
+
+all: $(NAME)
+
+$(NAME): $(OBJ) $(MLX) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) -o $@ $(MLX) $(LIBFT)
+
+$(OBJ_DIR)/%.o: %.c
+	mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(MLX):
+	$(MAKE) -C $(MLX_DIR)
 
 $(LIBFT):
-	@echo "\n-Compiling Libft...\n"
-	@$(MAKE) -C $(LIBFT_LIB)
-
-$(OBJ): %.o: %.c
-	@echo "Compiling $@..."
-	@$(MAKE) -s -C $(MLX_LIB_DIR)
-	@$(CC) $(CFLAGS) $(INCLUDES) $(MLX_INCLUDE) -c $< -o $@
-
-$(NAME): $(OBJ)
-	@echo "\n-Linking $(NAME) with Libft and MLX...\n"
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
-	@echo "\n--------------------------------"
-	@echo "$(NAME) is ready!"
-	@echo "--------------------------------"
+	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-	@echo "\n-Cleaning Libft..."
-	$(MAKE) -C $(LIBFT_LIB) clean
-	@echo "\n-Cleaning object files..."
-	@rm -f $(OBJ)
-	@echo "\n--------------------------------"
-	@echo "$(NAME) object files cleaned!"
-	@echo "--------------------------------"
+	rm -rf $(OBJ_DIR)
+	$(MAKE) -C $(MLX_DIR) clean
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	@echo "\n-Cleaning $(NAME) and Libft..."
 	rm -f $(NAME)
-	$(MAKE) -C $(LIBFT_LIB) fclean
-	@echo "\n--------------------------------"
-	@echo "$(NAME) cleaned!"
-	@echo "--------------------------------"
-
+	
 re: fclean all
 
-1:
-	@make && ./$(NAME) map.cub
-
-.PHONY: all clean fclean re
+.PHONY: all fclean clean re
