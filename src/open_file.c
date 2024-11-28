@@ -6,11 +6,42 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 13:38:17 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/17 18:54:25 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/27 17:48:26 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
+
+// Função para calcular a altura do mapa
+void	set_map_size(char **map)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+			x++;
+		if (x > data_()->matrix_width)
+			data_()->matrix_width = x;
+		y++;
+	}
+	data_()->matrix_height = y;
+}
+
+void free_mat(char **mat)
+{
+	int i = 0;
+
+	while (mat[i] != NULL)
+	{
+		free(mat[i]);
+		i++;
+	}
+	free(mat);
+}
 
 char	**read_map(int fd)
 {
@@ -37,6 +68,9 @@ char	**read_map(int fd)
 		ft_putstr_fd("Error\nMap is empty\n", 2);
 		return (NULL);
 	}
+	set_map_size(map_index);
+	if (data_()->matrix_height < 3)
+		exitmap(map_index, 1, "Error\nMap is too low\n");
 	return (map_index);
 }
 
@@ -55,6 +89,9 @@ int	file_name_verification(char *path)
 		return (1);
 	return (0);
 }
+
+
+
 // Return 1 if all correct
 // Return 0 if not correct and print the error
 int	open_file(char *path)
@@ -65,22 +102,23 @@ int	open_file(char *path)
 	if (!file_name_verification(path))
 	{
 		ft_putstr_fd("Error\nInvalid file name\n", 2);
-		return (0);
+		exit(1);
 	}
 	//Open Map
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 	{
 		perror("Error\nNot able to open the file:");
-		return (0);
+		exit(1);
 	}
 	//Read Map
 	data_()->map = read_map(fd);
 	if (data_()->map == NULL)
-		return (0);
+		exit(1);
 	print_map(); // <-- Test
 	//Check if valid map
-
+	check_symbols(data_()->map);
+	init_data(data_());
 	//Load all necessary data to t_data struct
 
 	//Return 1 if all good

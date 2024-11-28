@@ -12,6 +12,31 @@
 
 #include "../include/cub3d.h"
 
+void	player_input(t_binds *key, int keycode, bool pressed)
+{
+	if (keycode == 115)
+		key->move_up = pressed;
+	if (keycode == 119)
+		key->move_down = pressed;
+	if (keycode == 97)
+		key->move_left = pressed;
+	if (keycode == 100)
+		key->move_right = pressed;
+	if (keycode == 65361)
+		key->camera_left = pressed;
+	if (keycode == 65363)
+		key->camera_right = pressed;
+	if (keycode == 65307)
+		key->esc = pressed;
+}
+
+
+int	key_lift(int keycode, t_data *data)
+{
+	player_input(data->key, keycode, 0);
+	return (0);
+}
+
 int	is_wall_line(t_data *data, float next_y, float next_x, int *flag)
 {
 	int	y;
@@ -72,33 +97,33 @@ void	player_movement(int keycode, t_data *data)
 	player = data->player;
 	if (keycode == W || keycode == UP)
 	{
-		if (!is_wall_player(data, player->y + PLAYER_SPEED * sin(player->angle), player->x + PLAYER_SPEED * cos(player->angle)))
+		if (!is_wall_player(data, player->y + PLAYER_SPEED * sin(player->orient), player->x + PLAYER_SPEED * cos(player->orient)))
 		{
-			player->y += PLAYER_SPEED * sin(player->angle);
-			player->x += PLAYER_SPEED * cos(player->angle);
+			player->y += PLAYER_SPEED * sin(player->orient);
+			player->x += PLAYER_SPEED * cos(player->orient);
 		}
 	}
 	if (keycode == S || keycode == DOWN)
 	{
-		if (!is_wall_player(data, player->y - PLAYER_SPEED * sin(player->angle), player->x - PLAYER_SPEED * cos(player->angle)))
+		if (!is_wall_player(data, player->y - PLAYER_SPEED * sin(player->orient), player->x - PLAYER_SPEED * cos(player->orient)))
 		{
-			player->y -= PLAYER_SPEED * sin(player->angle);
-			player->x -= PLAYER_SPEED * cos(player->angle);
+			player->y -= PLAYER_SPEED * sin(player->orient);
+			player->x -= PLAYER_SPEED * cos(player->orient);
 		}
 	}
 	if (keycode == A || keycode == LEFT)
 	{
-		player->angle -= 0.1;
-		if (player->angle < 0)
-			player->angle += 2 * M_PI;
+		player->orient -= 0.1;
+		if (player->orient < 0)
+			player->orient += 2 * M_PI;
 	}
 	if (keycode == D || keycode == RIGHT)
 	{
-		player->angle += 0.1;
-		if (player->angle < 0)
-			player->angle -= 2 * M_PI;
+		player->orient += 0.1;
+		if (player->orient < 0)
+			player->orient -= 2 * M_PI;
 	}
-	draw_map_v1(data);
+	loop_handler(data);
 }
 
 int	keypress(int keycode, t_data *data)

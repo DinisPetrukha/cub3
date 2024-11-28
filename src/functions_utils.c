@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 16:02:04 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/18 13:49:53 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/11/28 21:42:57 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,19 @@
 
 void	init_image(t_image *image)
 {
-	image->img_ptr = mlx_new_image(data_()->mlx_ptr, 500, 500);
+	image->img_ptr = mlx_new_image(data_()->mlx_ptr, WINDOW_HEIGHT, WINDOW_WIDTH);
 	image->addr = mlx_get_data_addr(image->img_ptr, &image->bpp,
 			&image->line_len, &image->endian);
+}
+
+void	init_keys(t_data *data)
+{
+	data->key = malloc(sizeof(t_binds));
+	data->key->move_up = 0;
+	data->key->move_down = 0;
+	data->key->move_left = 0;
+	data->key->move_right = 0;
+	data->key->camera_left = 0;
+	data->key->camera_right = 0;
+	data->key->esc = 0;
 }
