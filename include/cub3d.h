@@ -8,7 +8,10 @@
 # define BLOCK_SIZE 32
 # define PLAYER_SIZE_V1 12
 
-# define PLAYER_SPEED 4
+# define FOV_WIDE 0.5
+# define FOV_DEEPNESS 100
+
+# define PLAYER_SPEED 0.5
 
 # define W 119
 # define UP 65362
@@ -103,6 +106,7 @@ void	print_map(void);
 //GAME_INIT
 int		game_init(void);
 void	init_data(t_data *data);
+void	load_sructures(t_data *data);
 
 //CLOSE_FREE
 int		close_window(t_data *data);
@@ -111,8 +115,10 @@ int		close_window(t_data *data);
 int		is_wall_player(t_data *data, float next_y, float next_x);
 int		is_wall_line(t_data *data, float next_y, float next_x, int *flag);
 void	player_movement(int keycode, t_data *data);
-int		keypress(int keycode, t_data *data);
+// int		keypress(int keycode, t_data *data);
 int		key_lift(int keycode, t_data *data);
+int		key_press(int keycode, t_data *data);
+void	apply_changes(t_data *data);
 void	player_input(t_binds *key, int keycode, bool pressed);
 
 //DRAW_MAP

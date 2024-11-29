@@ -73,8 +73,7 @@ void	draw_player(t_player *player)
 		data_()->first_render = 1;
 	}
 	draw_square_to_image(player->x, player->y, 0x00FF0000, PLAYER_SIZE_V1, data_()->frame);
-	// draw_player_lines(player, 0xFFFFFF, data_()->frame);
-	draw_player_rays(player, -0.50, 0.50, 50, 0xFFFFFF, data_()->frame);
+	draw_player_rays(player, -FOV_WIDE, FOV_WIDE, FOV_DEEPNESS, 0xFFFFFF, data_()->frame);
 }
 
 void	draw_square_to_image(int x, int y, int color, int size, t_image *image)
@@ -164,12 +163,13 @@ int	loop_handler(void *param)
 
 	clock_gettime(CLOCK_REALTIME, &instant);
 	t_data *data = (t_data *)param;
-	if ((data->dif_timer != instant.tv_nsec / 100000000) && (instant.tv_nsec / 100000000 % 1 == 0))
-	{
+	// if ((data->dif_timer != instant.tv_nsec / 100000000) && (instant.tv_nsec / 100000000 % 1 == 0))
+	// {
+		apply_changes(data);
 		draw_minimap(data);
 		draw_player(data->player);
 		mlx_put_image_to_window(data_()->mlx_ptr, data_()->window, data_()->frame->img_ptr, 0, 0);
-		data->dif_timer = instant.tv_nsec / 100000000;
-	}
+		// data->dif_timer = instant.tv_nsec / 100000000;
+	// }
 	return (0);
 }

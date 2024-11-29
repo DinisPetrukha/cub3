@@ -14,13 +14,13 @@
 
 void	player_input(t_binds *key, int keycode, bool pressed)
 {
-	if (keycode == 115)
+	if (keycode == S)
 		key->move_up = pressed;
-	if (keycode == 119)
+	if (keycode == W)
 		key->move_down = pressed;
-	if (keycode == 97)
+	if (keycode == A)
 		key->move_left = pressed;
-	if (keycode == 100)
+	if (keycode == D)
 		key->move_right = pressed;
 	if (keycode == 65361)
 		key->camera_left = pressed;
@@ -33,7 +33,13 @@ void	player_input(t_binds *key, int keycode, bool pressed)
 
 int	key_lift(int keycode, t_data *data)
 {
-	player_input(data->key, keycode, 0);
+	player_input(data->key, keycode, false);
+	return (0);
+}
+
+int	key_press(int keycode, t_data *data)
+{
+	player_input(data->key, keycode, true);
 	return (0);
 }
 
@@ -90,44 +96,47 @@ int	is_wall_player(t_data *data, float next_y, float next_x)
 	return (0); // Sem colisão
 }
 
-void	player_movement(int keycode, t_data *data)
+void apply_changes(t_data *data)
 {
-	t_player	*player;
+	float	pos_y;
+	float	pos_x;
 
-	player = data->player;
-	if (keycode == W || keycode == UP)
+	t_player *player = data->player;
+	pos_y = (PLAYER_SPEED * sin(player->orient));
+	pos_x = (PLAYER_SPEED * cos(player->orient));
+	// Movimento para frente
+	if (data->key->move_up)
 	{
-		if (!is_wall_player(data, player->y + PLAYER_SPEED * sin(player->orient), player->x + PLAYER_SPEED * cos(player->orient)))
-		{
-			player->y += PLAYER_SPEED * sin(player->orient);
-			player->x += PLAYER_SPEED * cos(player->orient);
-		}
+		if (!is_wall_player(data, player->y - pos_y, player->x))
+			player->y -= pos_y;
+		if (!is_wall_player(data, player->y, player->x - pos_x))
+			player->x -= pos_x;
 	}
-	if (keycode == S || keycode == DOWN)
+
+	// Movimento para trás
+	if (data->key->move_down)
 	{
-		if (!is_wall_player(data, player->y - PLAYER_SPEED * sin(player->orient), player->x - PLAYER_SPEED * cos(player->orient)))
-		{
-			player->y -= PLAYER_SPEED * sin(player->orient);
-			player->x -= PLAYER_SPEED * cos(player->orient);
-		}
+		if (!is_wall_player(data, player->y + pos_y, player->x))
+			player->y += pos_y;
+		if (!is_wall_player(data, player->y, player->x + pos_x))
+			player->x += pos_x;
 	}
-	if (keycode == A || keycode == LEFT)
-	{
-		player->orient -= 0.1;
+
+	// Rotação da câmera
+	if (data->key->camera_left) {
+		player->orient -= 0.007;
 		if (player->orient < 0)
 			player->orient += 2 * M_PI;
 	}
-	if (keycode == D || keycode == RIGHT)
-	{
-		player->orient += 0.1;
-		if (player->orient < 0)
+	if (data->key->camera_right) {
+		player->orient += 0.007;
+		if (player->orient >= 2 * M_PI)
 			player->orient -= 2 * M_PI;
 	}
-	loop_handler(data);
 }
 
-int	keypress(int keycode, t_data *data)
-{
-	player_movement(keycode, data);
-	return (1);
-}
+// int	keypress(int keycode, t_data *data)
+// {
+// 	player_movement(keycode, data);
+// 	return (1);
+// }
