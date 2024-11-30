@@ -12,6 +12,7 @@
 # define FOV_DEEPNESS 100
 
 # define PLAYER_SPEED 0.5
+# define ROTATION_SPEED 0.007
 
 # define W 119
 # define UP 65362

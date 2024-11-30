@@ -169,7 +169,7 @@ int	loop_handler(void *param)
 		draw_minimap(data);
 		draw_player(data->player);
 		mlx_put_image_to_window(data_()->mlx_ptr, data_()->window, data_()->frame->img_ptr, 0, 0);
-		// data->dif_timer = instant.tv_nsec / 100000000;
+	// 	data->dif_timer = instant.tv_nsec / 100000000;
 	// }
 	return (0);
 }

@@ -124,12 +124,12 @@ void apply_changes(t_data *data)
 
 	// Rotação da câmera
 	if (data->key->camera_left) {
-		player->orient -= 0.007;
+		player->orient -= ROTATION_SPEED;
 		if (player->orient < 0)
 			player->orient += 2 * M_PI;
 	}
 	if (data->key->camera_right) {
-		player->orient += 0.007;
+		player->orient += ROTATION_SPEED;
 		if (player->orient >= 2 * M_PI)
 			player->orient -= 2 * M_PI;
 	}
