@@ -123,6 +123,10 @@ void	apply_changes(t_data *data);
 void	player_input(t_binds *key, int keycode, bool pressed);
 
 //DRAW_MAP
+
+void	draw_half(t_image *image, int ccolor, int fcolor);
+void	draw_bar(t_image *image, float distant, int pos_x);
+
 int		loop_handler(void *param);
 void	draw_player_lines(t_player *player, int color, t_image *image);
 void	draw_square_to_image(int x, int y, int color, int size, t_image *image);
