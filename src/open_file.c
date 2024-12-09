@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 13:38:17 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/27 17:48:26 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/12/09 09:49:58 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ char	**read_map(int fd)
 		free(tmp);
 	}
 	map_index = ft_split(map_inline, '\n');
+	free(map_inline);
 	if (!map_index)
 	{
 		ft_putstr_fd("Error\nMap is empty\n", 2);

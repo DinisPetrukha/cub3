@@ -6,7 +6,7 @@
 /*   By: dpetrukh <dpetrukh@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 16:47:46 by dpetrukh          #+#    #+#             */
-/*   Updated: 2024/11/29 16:49:27 by dpetrukh         ###   ########.fr       */
+/*   Updated: 2024/12/09 09:32:45 by dpetrukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	init_data(t_data *data)
 {
-	data->player = malloc(sizeof(t_player));
-	if (!data->player)
-		exitmap(data_()->map, 1, "Error\nMalloc\n");
+	static t_player	player;
+
+	data->player = &player;
 	check_player(data->map, data->player);
 }
 
@@ -24,7 +24,8 @@ void	init_data(t_data *data)
 // Return 0 if not success
 int	game_init(void)
 {
-	t_data	*data;
+	t_data			*data;
+	static t_image	frame;
 
 	data = data_();
 	data->dif_timer = 0;
@@ -37,11 +38,9 @@ int	game_init(void)
 		return (0);
 	// Initializing The Main Frame
 	printf("Map Height: %i\nMap Width: %i\n", data->matrix_height, data->matrix_width);
-	data->frame = malloc(sizeof(t_image));
+	data->frame = &frame;
 	init_image(data->frame);
 	init_keys(data);
-	// Drawing Like a Picasso
-	// loop_handler(data);
 	// Close window when X it's Clicked
 	mlx_hook(data->window, DestroyNotify, StructureNotifyMask,
 		close_window, data);
