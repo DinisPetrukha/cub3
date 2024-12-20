@@ -9,7 +9,7 @@
 # define PLAYER_SIZE_V1 12
 
 # define FOV_WIDE 0.5
-# define FOV_DEEPNESS 100
+# define FOV_DEEPNESS 300
 
 # define PLAYER_SPEED 0.5
 # define ROTATION_SPEED 0.007
@@ -76,7 +76,7 @@ typedef struct s_player {
 typedef struct s_data {
 	void		*mlx_ptr;
 	void		*window;
-	void		*image_ptr;
+	//void		*image_ptr;
 	char		**map;
 	int			first_render;
 	int			matrix_width;
@@ -84,6 +84,7 @@ typedef struct s_data {
 	int			dif_timer;
 	t_binds		*key;
 	t_image		*frame;
+	t_image		*black_screen;
 	t_player	*player;
 }
 	t_data;
@@ -125,10 +126,11 @@ void	player_input(t_binds *key, int keycode, bool pressed);
 //DRAW_MAP
 
 void	draw_half(t_image *image, int ccolor, int fcolor);
-void	draw_bar(t_image *image, float distant, int pos_x);
+void	draw_bar(t_image *image, float distant, int pos_x, int color);
 
 int		loop_handler(void *param);
-void	draw_player_lines(t_player *player, int color, t_image *image);
+void	draw_rays_range(t_player *player, float angle_min, float angle_max, int num_rays, int color, t_image *image);
+//void	draw_player_lines(t_player *player, int color, t_image *image);
 void	draw_square_to_image(int x, int y, int color, int size, t_image *image);
 void	draw_player(t_player *player);
 void	my_mlx_pixel_put(t_image *image, int y, int x, int color);

@@ -26,6 +26,7 @@ int	game_init(void)
 {
 	t_data			*data;
 	static t_image	frame;
+	static t_image	black_screen;
 
 	data = data_();
 	data->dif_timer = 0;
@@ -40,6 +41,8 @@ int	game_init(void)
 	printf("Map Height: %i\nMap Width: %i\n", data->matrix_height, data->matrix_width);
 	data->frame = &frame;
 	init_image(data->frame);
+	data->black_screen = &black_screen;
+	init_image(data->black_screen);
 	init_keys(data);
 	// Close window when X it's Clicked
 	mlx_hook(data->window, DestroyNotify, StructureNotifyMask,

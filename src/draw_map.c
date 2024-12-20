@@ -172,31 +172,33 @@ void	draw_3d(t_data *data, t_player *player, t_image *image)
 
 	i = 0;
 	current_angle = 0;
-	//render_distance = 300;
 	angle_step = (WINDOW_WIDTH / FOV_WIDE);
 	while (i < WINDOW_WIDTH)
 	{
 
-		distant = rainbow(data, player, (player->orient + current_angle) <= FOV_DEEPNESS);
+		distant = rainbow(data, player, (player->orient + current_angle));
 		//only in range of proper distance 
 		//add color do #define
 		//printf("DISTANCE: %f\n", distant);
-		draw_half(image, 13158350, 15329736);
-		if ((int)distant > 6 && ((int)distant <= FOV_DEEPNESS))
-			draw_bar(image, distant, 500);
+			//draw_half(image, 13158350, 15329736);
+		if ((int)distant >= 6 && ((int)distant <= FOV_DEEPNESS))
+			draw_bar(image, distant, 500, 30000);
+		else
+			draw_bar(image, 6, 500, 1);
 		current_angle += angle_step;
 		i++;
 	}
 }
 
 
-void	draw_line_at_angle(t_player *player, float angle, int color, t_image *image)
+void	draw_line_at_angle(t_player *player, float angle, int color, int window_x, t_image *image)
 {
 	int		center[2];
 	int		line_len;
 	int		line[2];
 	int		i;
 	int		hit_wall_flag;
+	float		distant;
 
 	center[0] = player->y + (PLAYER_SIZE_V1 / 2);
 	center[1] = player->x + (PLAYER_SIZE_V1 / 2);
@@ -211,11 +213,39 @@ void	draw_line_at_angle(t_player *player, float angle, int color, t_image *image
 			my_mlx_pixel_put(image, line[0], line[1], color);
 		i++;
 	}
-	//draw_3d(data_(), player, image);
-	//printf("DISTANCE: %f\n", rainbow(data_(), player, (player->orient + angle)));
-
+	distant = rainbow(data_(), player, (player->orient + angle));
+	if ((int)distant >= 6 && ((int)distant <= FOV_DEEPNESS))
+		draw_bar(image, distant, window_x, 30000);
+	else
+		draw_bar(image, 6, window_x, 1);
 }
 
+//ALWAYS ODD NUMBERS OF NUM_RAYS
+void	draw_rays_range(t_player *player, float angle_min, float angle_max, int num_rays, int color, t_image *image)
+{
+	float	angle_step;
+	float	current_angle;
+	int		i;
+	int	window_x;
+	int	step_x;
+
+
+	// Divide o intervalo entre os ângulos em partes iguais
+	angle_step = (angle_max - angle_min) / (num_rays - 1);
+	current_angle = angle_min;
+	step_x = WINDOW_WIDTH / (num_rays + 1);
+	//printf("STEP: %d\n", step_x);
+	window_x = step_x;
+	i = 0;
+	while (i < num_rays)
+	{
+		draw_line_at_angle(player, current_angle, color, window_x, image);
+		current_angle += angle_step;
+		window_x += step_x;
+		i++;
+	}
+}
+/*
 void	draw_player_rays(t_player *player, float angle_min, float angle_max, int num_rays, int color, t_image *image)
 {
 	float	angle_step;
@@ -233,7 +263,7 @@ void	draw_player_rays(t_player *player, float angle_min, float angle_max, int nu
 		current_angle += angle_step;
 		i++;
 	}
-}
+}*/
 
 void	draw_player(t_player *player)
 {
@@ -248,7 +278,8 @@ void	draw_player(t_player *player)
 	}
 	//printf("PL_X: %f PL_Y: %f\n", player->x, player->y);
 	draw_square_to_image(player->x, player->y, 0x00FF0000, PLAYER_SIZE_V1, data_()->frame);
-	draw_line_at_angle(player, 0, 0xFFFFFF, data_()->frame);
+	//draw_line_at_angle(player, 0, 0xFFFFFF, data_()->frame);
+	draw_rays_range(player, -FOV_WIDE, FOV_WIDE, 51, 0xFFFFFF, data_()->frame);
 	//draw_player_rays(player, -FOV_WIDE, FOV_WIDE, FOV_DEEPNESS, 0xFFFFFF, data_()->frame);
 }
 
@@ -282,23 +313,32 @@ void	draw_half(t_image *image, int ccolor, int fcolor)
 	}
 }
 
-void	draw_bar(t_image *image, float distant, int pos_x)
+void	draw_bar(t_image *image, float distant, int pos_x, int color)
 {
-	//pixer per distance
-	float	ppd;
 	float	bar_size;
 	int	cur_y;
+	int	start_y;
 
-	ppd = (FOV_DEEPNESS - (PLAYER_SIZE_V1 / 2)) / (WINDOW_HEIGHT - 1);
-	bar_size = WINDOW_HEIGHT - (distant - (PLAYER_SIZE_V1 / 2)) * ppd;
-	cur_y = (int)ceilf(bar_size) / 2;
-	while (cur_y < (int)ceilf(bar_size))
+	bar_size = WINDOW_HEIGHT - (distant - PLAYER_SIZE_V1 / 2) * (WINDOW_HEIGHT - 1) / (FOV_DEEPNESS - PLAYER_SIZE_V1 / 2);
+	start_y = (WINDOW_HEIGHT / 2) - ((int)ceilf(bar_size) / 2);
+	cur_y = 0;
+	//VAI ESCREVER POR CIMA DO MINIMAPA!
+	while (cur_y < WINDOW_HEIGHT)
 	{
-		my_mlx_pixel_put(image, cur_y, pos_x, 6617700);
+		if (cur_y == start_y)
+		{
+			while (cur_y - start_y < (int)ceilf(bar_size))
+			{
+				my_mlx_pixel_put(image, cur_y, pos_x, color);
+				cur_y++;
+			}
+		}
+		else
+			my_mlx_pixel_put(image, cur_y, pos_x, 1);
 		cur_y++;
 	}
 }
-/*
+
 void	draw_rectangle_to_image(t_image *image, int start[2], int end[2], int color)
 {
 	//[0] = x [1] = y
@@ -316,7 +356,7 @@ void	draw_rectangle_to_image(t_image *image, int start[2], int end[2], int color
 		}
 		cur_y++;
 	}
-}*/
+}
 
 void	draw_square_to_image(int x, int y, int color, int size, t_image *image)
 {
@@ -373,8 +413,6 @@ void	draw_square_to_image(int x, int y, int color, int size, t_image *image)
 // }
 
 
-
-
 void	draw_minimap(t_data *data)
 {
 	int	y;
@@ -396,6 +434,26 @@ void	draw_minimap(t_data *data)
 	}
 }
 
+
+void	clear_rest(t_data *data)
+{
+	int	cur_x;
+	int	cur_y;
+
+	cur_y = 0;
+	while (cur_y < WINDOW_HEIGHT)
+	{
+		cur_x = 0;
+		while (cur_x < WINDOW_WIDTH)
+		{
+			if (cur_x > data->matrix_width * BLOCK_SIZE || cur_y > data->matrix_height * BLOCK_SIZE)
+			my_mlx_pixel_put(data->frame, cur_y, cur_x, 1);
+			cur_x++;
+		}
+		cur_y++;
+	}
+}
+
 int	loop_handler(void *param)
 {
 	struct timespec instant;
@@ -408,6 +466,7 @@ int	loop_handler(void *param)
 		//draw_3d(data, data->player, data->frame);
 		//draw_half(data->frame, 13158350, 15329736);
 		draw_minimap(data);
+		//clear_rest(data);
 		draw_player(data->player);
 		mlx_put_image_to_window(data_()->mlx_ptr, data_()->window, data_()->frame->img_ptr, 0, 0);
 	// 	data->dif_timer = instant.tv_nsec / 100000000;
