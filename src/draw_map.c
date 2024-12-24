@@ -214,10 +214,15 @@ void	draw_line_at_angle(t_player *player, float angle, int color, int window_x, 
 		i++;
 	}
 	distant = rainbow(data_(), player, (player->orient + angle));
-	if ((int)distant >= 6 && ((int)distant <= FOV_DEEPNESS))
+//https://stackoverflow.com/questions/66591163/how-do-i-fix-the-warped-perspective-in-my-raycaster
+	distant = fabs(distant * (cosf(angle)));
+	if ((int)distant >= 0 && ((int)distant <= FOV_DEEPNESS))
 		draw_bar(image, distant, window_x, 30000);
 	else
+	{
+		//printf("DISTANCE: %f\n", distant);
 		draw_bar(image, 6, window_x, 1);
+	}
 }
 
 //ALWAYS ODD NUMBERS OF NUM_RAYS
@@ -279,7 +284,7 @@ void	draw_player(t_player *player)
 	//printf("PL_X: %f PL_Y: %f\n", player->x, player->y);
 	draw_square_to_image(player->x, player->y, 0x00FF0000, PLAYER_SIZE_V1, data_()->frame);
 	//draw_line_at_angle(player, 0, 0xFFFFFF, data_()->frame);
-	draw_rays_range(player, -FOV_WIDE, FOV_WIDE, 51, 0xFFFFFF, data_()->frame);
+	draw_rays_range(player, -FOV_WIDE, FOV_WIDE, 21, 0xFFFFFF, data_()->frame);
 	//draw_player_rays(player, -FOV_WIDE, FOV_WIDE, FOV_DEEPNESS, 0xFFFFFF, data_()->frame);
 }
 
@@ -319,7 +324,8 @@ void	draw_bar(t_image *image, float distant, int pos_x, int color)
 	int	cur_y;
 	int	start_y;
 
-	bar_size = WINDOW_HEIGHT - (distant - PLAYER_SIZE_V1 / 2) * (WINDOW_HEIGHT - 1) / (FOV_DEEPNESS - PLAYER_SIZE_V1 / 2);
+	//bar_size = WINDOW_HEIGHT - (distant - PLAYER_SIZE_V1 / 2) * (WINDOW_HEIGHT - 1) / (FOV_DEEPNESS - PLAYER_SIZE_V1 / 2);
+	bar_size = (int)round((1 - (distant / FOV_DEEPNESS)) * WINDOW_HEIGHT);
 	start_y = (WINDOW_HEIGHT / 2) - ((int)ceilf(bar_size) / 2);
 	cur_y = 0;
 	//VAI ESCREVER POR CIMA DO MINIMAPA!
